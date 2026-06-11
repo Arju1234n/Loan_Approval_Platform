@@ -9,14 +9,13 @@ const adminRoutes = require('./modules/admin/routes/adminRoutes');
 const analyticsRoutes = require('./modules/analytics/routes/analyticsRoutes');
 const notificationRoutes = require('./modules/notification/routes/notificationRoutes');
 
-const isDev = process.env.NODE_ENV !== 'production';
-
-// Allowed origins: production Vercel URL + all Vercel preview deployments
+// Allowed origins: production Vercel URL + all Vercel/Render preview deployments + local dev
 const ALLOWED_ORIGINS = [
-  process.env.CLIENT_URL,                          // exact production URL
-  /^https:\/\/.*\.vercel\.app$/,                   // all Vercel preview URLs
-  /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/,    // local dev
-];
+  process.env.CLIENT_URL,                           // exact production Vercel URL
+  /^https:\/\/.*\.vercel\.app$/,                    // ALL Vercel preview URLs
+  /^https:\/\/.*\.onrender\.com$/,                  // ALL Render URLs (backend↔frontend)
+  /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/,     // local dev any port
+].filter(Boolean); // remove undefined if CLIENT_URL not set
 
 const app = express();
 
@@ -29,6 +28,7 @@ app.use(cors({
       typeof o === 'string' ? o === origin : o.test(origin)
     );
     if (allowed) return cb(null, true);
+    console.warn(`[CORS] Blocked origin: ${origin}`);
     cb(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
