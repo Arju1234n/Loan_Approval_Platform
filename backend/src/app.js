@@ -11,15 +11,24 @@ const notificationRoutes = require('./modules/notification/routes/notificationRo
 
 const isDev = process.env.NODE_ENV !== 'production';
 
+// Allowed origins: production Vercel URL + all Vercel preview deployments
+const ALLOWED_ORIGINS = [
+  process.env.CLIENT_URL,                          // exact production URL
+  /^https:\/\/.*\.vercel\.app$/,                   // all Vercel preview URLs
+  /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/,    // local dev
+];
+
 const app = express();
 
 app.use(helmet());
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow: no origin (curl / Postman), any localhost in dev, explicit CLIENT_URL in prod
+    // Allow requests with no origin (curl, Postman, server-to-server)
     if (!origin) return cb(null, true);
-    if (isDev && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, true);
-    if (origin === process.env.CLIENT_URL) return cb(null, true);
+    const allowed = ALLOWED_ORIGINS.some(o =>
+      typeof o === 'string' ? o === origin : o.test(origin)
+    );
+    if (allowed) return cb(null, true);
     cb(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
