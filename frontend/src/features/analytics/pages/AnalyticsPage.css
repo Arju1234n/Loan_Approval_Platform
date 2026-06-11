@@ -1,0 +1,69 @@
+/* ── Page ─────────────────────────────────────── */
+.analytics-page { max-width: 1200px; margin: 0 auto; animation: fadeUp .3s ease; }
+
+.analytics-header { margin-bottom: 24px; }
+.analytics-header h1 { font-size: 1.6rem; font-weight: 800; color: var(--heading); margin-bottom: 3px; }
+
+/* ── KPI Grid ─────────────────────────────────── */
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; margin-bottom: 20px;
+}
+.kpi-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px;
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px);
+  transition: border-color .2s, transform .2s;
+  position: relative; overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--c, var(--brand));
+}
+.kpi-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.kpi-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  display: grid; place-items: center; flex-shrink: 0;
+  background: color-mix(in srgb, var(--c, var(--brand)) 15%, transparent);
+  color: var(--c, var(--brand));
+}
+.kpi-value { font-size: 1.6rem; font-weight: 800; color: var(--heading); line-height: 1; margin-bottom: 3px; }
+.kpi-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+.kpi-sub   { font-size: 0.7rem;  color: var(--text-dim); margin-top: 2px; }
+
+/* ── Charts Grid ──────────────────────────────── */
+.charts-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.chart-card {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px;
+  backdrop-filter: blur(16px);
+  transition: border-color .2s;
+}
+.chart-card:hover { border-color: var(--border-hover); }
+.chart-card-header { margin-bottom: 16px; }
+.chart-title { font-size: 0.95rem; font-weight: 700; color: var(--heading); margin-bottom: 2px; }
+.chart-sub   { font-size: 0.74rem; color: var(--text-dim); }
+
+/* Reuse from AdminDashboard (admin-eyebrow, admin-subtitle) */
+.admin-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--brand-light); margin-bottom: 5px;
+}
+.admin-subtitle { font-size: 0.86rem; color: var(--text-muted); }
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 1024px) {
+  .kpi-grid    { grid-template-columns: repeat(2, 1fr); }
+  .charts-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+}

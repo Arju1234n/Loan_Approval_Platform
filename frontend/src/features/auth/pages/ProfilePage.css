@@ -1,0 +1,104 @@
+.profile-page { max-width: 640px; }
+
+.page-header { margin-bottom: 28px; }
+.page-header h1 { margin: 0; font-size: 2rem; font-weight: 800; color: var(--heading); }
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.profile-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+.profile-avatar-area {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 28px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+}
+
+.profile-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+  color: #0f2748;
+  font-size: 1.8rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(59,130,246,.3);
+}
+
+.profile-avatar-area h2 {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.role-badge.user  { background: #dbeafe; color: #1e40af; }
+.role-badge.admin { background: #fef3c7; color: #92400e; }
+
+.profile-fields { padding: 8px 0; }
+
+.profile-field {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 28px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background .15s;
+}
+
+.profile-field:last-child { border-bottom: none; }
+.profile-field:hover { background: #f8fafc; }
+
+.field-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: var(--brand);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.field-label {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.field-value {
+  margin: 0;
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--heading);
+}

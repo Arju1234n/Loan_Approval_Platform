@@ -1,0 +1,156 @@
+/* ── Admin Auth Screen ────────────────────────── */
+.admin-auth-screen {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #060912;
+  overflow: hidden;
+}
+
+/* Dot grid background */
+.admin-bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* Purple glow */
+.admin-bg-glow {
+  position: absolute;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,.18) 0%, transparent 70%);
+  top: -200px; left: 50%; transform: translateX(-50%);
+  pointer-events: none;
+  animation: glow-pulse 6s ease-in-out infinite;
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: .7; transform: translateX(-50%) scale(1); }
+  50%       { opacity: 1;  transform: translateX(-50%) scale(1.1); }
+}
+
+/* ── Card ─────────────────────────────────────── */
+.admin-auth-card {
+  position: relative;
+  width: min(440px, 100%);
+  background: rgba(15,18,32,0.85);
+  border: 1px solid rgba(99,102,241,.25);
+  border-radius: 20px;
+  backdrop-filter: blur(32px);
+  box-shadow:
+    0 0 0 1px rgba(99,102,241,.08),
+    0 32px 80px rgba(0,0,0,.6),
+    0 0 80px rgba(99,102,241,.08);
+  padding: 36px 32px;
+  animation: slide-up .4s ease;
+}
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Security Badge ───────────────────────────── */
+.admin-security-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 99px;
+  background: rgba(99,102,241,.12);
+  border: 1px solid rgba(99,102,241,.25);
+  color: #818cf8;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+/* ── Header ───────────────────────────────────── */
+.admin-card-header { text-align: center; margin-bottom: 20px; }
+.admin-logo {
+  display: inline-grid; place-items: center;
+  width: 64px; height: 64px; border-radius: 16px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff; margin-bottom: 14px;
+  box-shadow: 0 8px 32px rgba(99,102,241,.4);
+}
+.admin-card-header h1 {
+  font-size: 1.65rem; font-weight: 800; color: #f8fafc;
+  letter-spacing: -.4px; margin-bottom: 4px;
+}
+.admin-card-header p { color: rgba(255,255,255,.45); font-size: 0.88rem; }
+
+/* ── Notice ───────────────────────────────────── */
+.admin-notice {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 8px;
+  background: rgba(245,158,11,.08);
+  border: 1px solid rgba(245,158,11,.2);
+  color: #fbbf24; font-size: 0.8rem; font-weight: 500;
+  margin-bottom: 22px;
+}
+
+/* ── Form ─────────────────────────────────────── */
+.admin-auth-form { display: flex; flex-direction: column; gap: 16px; }
+
+.admin-auth-error {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 8px;
+  background: rgba(244,63,94,.12);
+  border: 1px solid rgba(244,63,94,.3);
+  color: #fda4af; font-size: 0.86rem; font-weight: 500;
+}
+
+/* Reuse field-label, input-wrap, input-icon, eye-btn from Auth.css */
+.field-label {
+  display: flex; flex-direction: column; gap: 7px;
+  color: rgba(255,255,255,.75); font-size: 0.86rem; font-weight: 600;
+}
+.input-wrap { position: relative; }
+.input-wrap input {
+  width: 100%; padding: 11px 12px 11px 38px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px;
+  background: rgba(255,255,255,.05);
+  color: #fff; font-size: 0.92rem; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.input-wrap input::placeholder { color: rgba(255,255,255,.25); }
+.input-wrap input:focus {
+  border-color: rgba(99,102,241,.6);
+  box-shadow: 0 0 0 3px rgba(99,102,241,.18);
+}
+.input-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: rgba(255,255,255,.35); pointer-events: none;
+}
+.eye-btn {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,.4); display: flex; padding: 0; transition: color .15s;
+}
+.eye-btn:hover { color: rgba(255,255,255,.8); }
+
+/* ── Button ───────────────────────────────────── */
+.admin-auth-btn {
+  margin-top: 4px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 48px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(99,102,241,.4);
+  transition: transform .15s, box-shadow .15s, opacity .15s;
+}
+.admin-auth-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(99,102,241,.5);
+}
+.admin-auth-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ── Switch ───────────────────────────────────── */
+.admin-auth-switch {
+  text-align: center; margin-top: 18px;
+  color: rgba(255,255,255,.4); font-size: 0.86rem;
+}
+.admin-auth-switch a { color: #818cf8; font-weight: 600; }
+.admin-auth-switch a:hover { text-decoration: underline; }
