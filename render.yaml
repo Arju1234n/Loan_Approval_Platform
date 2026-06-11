@@ -1,0 +1,54 @@
+services:
+  # ─────────────────────────────────────────────
+  # Backend – Node.js / Express API
+  # ─────────────────────────────────────────────
+  - type: web
+    name: loan-approval-platform
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false   # Set in Render Dashboard → Environment
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: ML_ENGINE_URL
+        value: https://loan-approval-platform-1.onrender.com
+      - key: CLIENT_URL
+        value: https://loan-approval-platform-frontend-13el78w93.vercel.app
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: 587
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+
+  # ─────────────────────────────────────────────
+  # ML Service – Python / FastAPI
+  # ─────────────────────────────────────────────
+  - type: web
+    name: loan-approval-platform-1
+    runtime: python
+    rootDir: ml-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ML_HOST
+        value: 0.0.0.0
+      - key: MODELS_DIR
+        value: models
+      - key: DATASET_PATH
+        value: dataset/loan_data.csv
+      - key: ALLOWED_ORIGINS
+        value: https://loan-approval-platform-frontend-13el78w93.vercel.app,https://loan-approval-platform.onrender.com
