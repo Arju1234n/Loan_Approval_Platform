@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
+  console.log("DEBUG MONGODB_URI type: ", typeof process.env.MONGODB_URI);
+  if (process.env.MONGODB_URI) {
+      console.log("DEBUG: Starts with mongodb: ", process.env.MONGODB_URI.startsWith("mongodb"));
+  } else {
+      console.log("DEBUG: MONGODB_URI is undefined or empty");
+  }
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`✓ MongoDB Connected: ${conn.connection.host}`);
