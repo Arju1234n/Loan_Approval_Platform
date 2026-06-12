@@ -1,8 +1,12 @@
 import axios from 'axios'
 
+// Always use a relative /api path.
+// • In dev  → Vite proxy forwards to Render backend
+// • In prod → Vercel rewrites forward to Render backend
+// Either way, the browser talks to the SAME host → zero CORS issues.
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://loan-approval-platform.onrender.com/api',
-  timeout: 30000, // 30s to handle Render cold starts
+  baseURL: '/api',
+  timeout: 35000, // 35s to handle Render cold starts (free tier can take ~30s)
 })
 
 // Attach JWT token automatically
@@ -12,11 +16,16 @@ api.interceptors.request.use(config => {
   return config
 })
 
-// Normalize error messages
+// Normalize error messages — give a clear hint on network failures
 api.interceptors.response.use(
   res => res,
   err => {
-    const message = err.response?.data?.message || err.message || 'Something went wrong'
+    let message
+    if (!err.response) {
+      message = 'Cannot reach the server. Please try again in a moment.'
+    } else {
+      message = err.response.data?.message || err.message || 'Something went wrong'
+    }
     return Promise.reject(new Error(message))
   }
 )

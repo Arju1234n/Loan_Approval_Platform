@@ -7,11 +7,12 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // All /api/* requests → backend :5000  (avoids CORS entirely)
+      // Proxy /api/* to the live Render backend — works without a local server.
+      // To use a local backend instead, change target to 'http://localhost:5000'
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://loan-approval-platform.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },
