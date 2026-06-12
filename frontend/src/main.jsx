@@ -5,6 +5,11 @@ import { Toaster } from 'react-hot-toast'
 import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './features/auth/hooks/useAuth'
+import { wakeupBackend } from './features/shared/services/wakeup'
+
+// Ping the backend immediately on load — warms up Render's free-tier cold start
+// so it's ready by the time the user clicks Sign In / Create Account.
+wakeupBackend()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

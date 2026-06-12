@@ -6,7 +6,7 @@ import axios from 'axios'
 // Either way, the browser talks to the SAME host → zero CORS issues.
 const api = axios.create({
   baseURL: '/api',
-  timeout: 35000, // 35s to handle Render cold starts (free tier can take ~30s)
+  timeout: 65000, // 65s — covers Render free-tier cold start (can take up to 60s)
 })
 
 // Attach JWT token automatically
@@ -16,13 +16,18 @@ api.interceptors.request.use(config => {
   return config
 })
 
-// Normalize error messages — give a clear hint on network failures
+// Normalize error messages — give clear hints based on failure type
 api.interceptors.response.use(
   res => res,
   err => {
     let message
     if (!err.response) {
-      message = 'Cannot reach the server. Please try again in a moment.'
+      // No response = network/timeout issue
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        message = 'The server is taking too long to respond. Please try again in a moment.'
+      } else {
+        message = 'Cannot reach the server. Please check your connection and try again.'
+      }
     } else {
       message = err.response.data?.message || err.message || 'Something went wrong'
     }

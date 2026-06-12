@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { CreditCard, User, Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { CreditCard, User, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import './Auth.css'
+
+const WAKING_UP_MSG = 'The server is taking too long'
 
 export default function RegisterPage() {
   const { register } = useAuth()
@@ -12,20 +14,30 @@ export default function RegisterPage() {
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [warming, setWarming] = useState(false)
+  const retryRef = useRef(null)
+
+  useEffect(() => () => clearTimeout(retryRef.current), [])
 
   const handleChange = e => setForm(p => ({ ...p, [e.target.name]: e.target.value }))
 
-  const handleSubmit = async e => {
-    e.preventDefault()
+  const handleSubmit = async (e, isRetry = false) => {
+    if (e && !isRetry) e.preventDefault()
     if (form.password.length < 6) { setError('Password must be at least 6 characters.'); return }
     setError('')
+    setWarming(false)
     setLoading(true)
     try {
       const user = await register(form.name, form.email, form.password)
       toast.success(`Account created! Welcome, ${user.name}!`)
       navigate('/')
     } catch (err) {
-      setError(err.message)
+      if (err.message.includes(WAKING_UP_MSG)) {
+        setWarming(true)
+        retryRef.current = setTimeout(() => handleSubmit(null, true), 10000)
+      } else {
+        setError(err.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -44,7 +56,13 @@ export default function RegisterPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {error && <div className="auth-error">{error}</div>}
+          {warming && (
+            <div className="auth-warming">
+              <Loader2 size={14} className="warming-spin" />
+              <span>Server is waking up… retrying automatically.</span>
+            </div>
+          )}
+          {error && !warming && <div className="auth-error">{error}</div>}
 
           <label className="field-label">
             Full Name

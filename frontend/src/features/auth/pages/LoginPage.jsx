@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { CreditCard, Mail, Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react'
+import { CreditCard, Mail, Lock, Eye, EyeOff, ShieldCheck, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import './Auth.css'
+
+const WAKING_UP_MSG = 'The server is taking too long'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -12,16 +14,21 @@ export default function LoginPage() {
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState('')
+  const [warming, setWarming]   = useState(false)
+  const retryRef = useRef(null)
+
+  // Clear auto-retry timer on unmount
+  useEffect(() => () => clearTimeout(retryRef.current), [])
 
   const handleChange = e => setForm(p => ({ ...p, [e.target.name]: e.target.value }))
 
-  const handleSubmit = async e => {
-    e.preventDefault()
+  const handleSubmit = async (e, isRetry = false) => {
+    if (e && !isRetry) e.preventDefault()
     setError('')
+    setWarming(false)
     setLoading(true)
     try {
       const user = await login(form.email, form.password)
-      // Admins should use /admin/login — redirect them
       if (user.role === 'admin') {
         toast.success(`Welcome Admin! Redirecting to dashboard…`)
         navigate('/admin')
@@ -30,7 +37,13 @@ export default function LoginPage() {
       toast.success(`Welcome back, ${user.name}!`)
       navigate('/')
     } catch (err) {
-      setError(err.message)
+      if (err.message.includes(WAKING_UP_MSG)) {
+        // Cold-start: show warm-up banner and auto-retry in 10s
+        setWarming(true)
+        retryRef.current = setTimeout(() => handleSubmit(null, true), 10000)
+      } else {
+        setError(err.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -56,7 +69,13 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {error && <div className="auth-error">{error}</div>}
+          {warming && (
+            <div className="auth-warming">
+              <Loader2 size={14} className="warming-spin" />
+              <span>Server is waking up… retrying automatically.</span>
+            </div>
+          )}
+          {error && !warming && <div className="auth-error">{error}</div>}
 
           <label className="field-label">
             Email address
